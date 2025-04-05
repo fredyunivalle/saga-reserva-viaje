@@ -8,10 +8,10 @@ Each service uses in-memory storage (Python lists or Node.js arrays), making it 
 
 ## 🚀 Microservices Overview
 
-| Service         | Port  | Description                              |
-|-----------------|-------|------------------------------------------|
+| Service         | Port  | Description                               |
+|-----------------|-------|-------------------------------------------|
 | flight_service  | 5001  | Simulates flight booking and cancellation |
-| hotel_service   | 5002  | Simulates hotel booking (with possible failure) |
+| hotel_service   | 5002  | Simulates hotel booking (with random failure) |
 | car_service     | 5003  | Simulates car rental booking              |
 | orchestrator    | 5000  | Coordinates the booking flow (Saga logic) |
 
@@ -31,16 +31,79 @@ Each service uses in-memory storage (Python lists or Node.js arrays), making it 
 git clone https://github.com/fredyunivalle/saga-reserva-viaje.git
 cd saga-reserva-viaje
 docker-compose up --build
-
 ```
-## 📦  Test the Workflow
+
+---
+
+## 🧪 Testing Each Microservice
+
+Use the following `curl` commands to test each service independently:
+
+### ✈️ Flight Service (http://localhost:5001)
+
 ```bash
+# Reserve a flight
+curl -X POST http://localhost:5001/reserve -H "Content-Type: application/json" -d '{"user": "john_doe"}'
+
+# Cancel flight
+curl -X POST http://localhost:5001/cancel -H "Content-Type: application/json" -d '{"user": "john_doe"}'
+
+# View all reservations
+curl http://localhost:5001/reservas
+```
+
+### 🏨 Hotel Service (http://localhost:5002)
+
+```bash
+# Reserve a hotel (may fail randomly)
+curl -X POST http://localhost:5002/reserve -H "Content-Type: application/json" -d '{"user": "john_doe"}'
+
+# Cancel hotel
+curl -X POST http://localhost:5002/cancel -H "Content-Type: application/json" -d '{"user": "john_doe"}'
+
+# View all reservations
+curl http://localhost:5002/reservas
+```
+
+### 🚗 Car Service (http://localhost:5003)
+
+```bash
+# Reserve a car
+curl -X POST http://localhost:5003/reserve -H "Content-Type: application/json" -d '{"user": "john_doe"}'
+
+# Cancel car
+curl -X POST http://localhost:5003/cancel -H "Content-Type: application/json" -d '{"user": "john_doe"}'
+
+# View all reservations
+curl http://localhost:5003/reservas
+```
+
+### 🤖 Orchestrator (http://localhost:5000)
+
+```bash
+# Book a complete trip
 curl -X POST http://localhost:5000/book-trip -H "Content-Type: application/json" -d '{"user": "john_doe"}'
 ```
-Each service will print logs in the console. If the hotel service fails randomly, the orchestrator will call the corresponding compensation routes.
 
-## 🎓 Final Challenge for Students
-Mission: Take this basic simulation and evolve it into a fault-tolerant, scalable, highly available system running in Kubernetes.
+---
+
+## 🔄 Saga Flow Diagram (Orchestration)
+
+```
+User
+  |
+  v
+Orchestrator --> Flight Service (/reserve)
+      |
+      v
+      --> Hotel Service (/reserve)   <-- may fail randomly
+      |
+      v
+      --> Car Service (/reserve)
+      |
+      v
+      On Error: Compensation (/cancel)
+```
 
 ---
 
@@ -112,4 +175,3 @@ This is a **team lab**. You must collaborate to implement a full Saga-based micr
 - Use Docker Compose for local testing, and Kubernetes for deployment in the final version.
 
 > 💡 Be creative. Think like real engineers. Surprise your instructor with something useful, fun, or just totally unexpected!
-
