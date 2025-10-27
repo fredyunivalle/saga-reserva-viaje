@@ -1,9 +1,19 @@
 {
   "name": "saga-reserva-viaje",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:2": {}
-  },
   "workspaceFolder": "/workspaces/saga-reserva-viaje",
-  "forwardPorts": [5000, 5001, 5002, 5003]
+
+  // Monta el socket del daemon Docker del host
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+
+  // (Opcional) instala docker CLI y compose si no estuvieran en la imagen
+  "postStartCommand": "bash -lc 'command -v docker >/dev/null 2>&1 || { sudo apt-get update && sudo apt-get install -y docker.io docker-compose-plugin; }; sudo usermod -aG docker $USER || true'",
+
+  // Puertos que luego podrías exponer con compose
+  "forwardPorts": [5000, 5001, 5002, 5003],
+
+  // Asegura que usamos el usuario vscode (tiene sudo)
+  "remoteUser": "vscode"
 }
