@@ -1,19 +1,9 @@
 {
-  "name": "saga-reserva-viaje Codespace",
-  "image": "mcr.microsoft.com/devcontainers/universal:1",
+  "name": "saga-reserva-viaje",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker": "1"
+    "ghcr.io/devcontainers/features/docker-from-docker:2": {}
   },
-  "forwardPorts": [5000, 5001, 5002, 5003],
-  "postStartCommand": "docker compose up -d --build",
   "workspaceFolder": "/workspaces/saga-reserva-viaje",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-azuretools.vscode-docker",
-        "ms-python.python",
-        "dbaeumer.vscode-eslint"
-      ]
-    }
-  }
+  "forwardPorts": [5000, 5001, 5002, 5003]
 }
