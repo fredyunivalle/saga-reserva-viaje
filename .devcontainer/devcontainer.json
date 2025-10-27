@@ -2,7 +2,7 @@
   "name": "saga-reserva-viaje",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
-    "ghcr.io/devcontainers/features/docker-from-docker:2": {}
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:2": {}
   },
   "workspaceFolder": "/workspaces/saga-reserva-viaje",
   "forwardPorts": [5000, 5001, 5002, 5003]
